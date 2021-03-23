@@ -50,7 +50,17 @@ example,
                          :store #'org-tsl-store-link)
 
 (defun org-tsl-open (query arg)
-  ;; arg is universal arg? learn how to use.
+  ;; TODO arg is universal arg? learn how to use. TODO more
+  ;; options to be added. TODO image => sxiv? TODO images =>
+  ;; dired? sxiv loop? TODO audio(s)/video(s) => emm? Use dired
+  ;; by default.. really open the files if universal argument is
+  ;; provided. in the later case, if there are multiple files,
+  ;; ask the user by using ivy what to do next: either ivy,
+  ;; force-open, or select one (or multiple?) to force-open.
   (let* ((result (tsl:find query))
          (len (length result)))
     (dired result)))
+
+(defun org-tsl-store-link ()
+  ;; TODO
+  )
