@@ -59,6 +59,7 @@ example,
                                     collect (f-directories dir)))
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
+;; TODO add a time profiler.
 
 
 
