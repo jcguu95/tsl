@@ -1,7 +1,8 @@
 ;; tsl -- timestamped links handler
 
 (setf tsl:lib '("~/data/storage/recordings"
-                "~/data/storage/memories/2011"))
+                "~/data/storage/memories/2011"
+                "~/data/storage/+org/wiki/fleeting"))
 
 (defun tsl:regex<-query (query)
   "Expect query to be a string in the following formats, in
@@ -36,7 +37,8 @@ example,
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 
-(tsl:find "201106")
+(tsl:find "20200610")
+(dired (tsl:find "20200610"))
 
 (dired (tsl:find "20111029-08"))
 
@@ -64,3 +66,4 @@ example,
 (defun org-tsl-store-link ()
   ;; TODO
   )
+
