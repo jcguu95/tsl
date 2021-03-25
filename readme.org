@@ -8,8 +8,8 @@ names. For example,
 #+end_src
 
 I want to cite them in my org files with ease, thus coming up
-with this little program. It adds a customized org link type
-"tsl".
+with this little program. It adds a [[https://orgmode.org/manual/Adding-Hyperlink-Types.html#Adding-Hyperlink-Types][customized org link type]]
+="tsl"=.
 
 * Example
 
@@ -18,25 +18,28 @@ you to all files under TSL:LIB that have the string
 "20190610-******" in name, and also pass
 
 From the org link:
-
-  [[tsl:20190610::(:name ("memory" "family") :hash "^304e")]]
+#+begin_src org
+[[tsl:20190610::(:name ("memory" "family") :hash "^304e")]]
+#+end_src
 
 this program will collect each file in one of the directory
-under TSL:LIB, if the followings are true.
+under =tsl:lib=, if the followings are true.
 
-1. That file has the timestring "20190610-******" in its name.
+1. That file has the string ="20190610-******"= in its name.
 
 2. That file passes the name test and hash test: its absolute
-   path, as a string, must matches the regex query "memory"
-   and "family"; its md5sum, as a string, must matches the
-   regex query "^304e".
+   path, as a string, must matches the regex query ="memory"= and
+   =family=; its md5sum, as a string, must matches the regex query
+   ="^304e"=.
 
 Variants are allowed. For example
 
-  [[tsl:2019::(:name "family")]]
-  [[tsl:201906::(:hash "^304e")]]
-  [[tsl:20190610-1543::(:name ("memory" "family"))]]
-  [[tsl:20190610-154317]]
+#+begin_src org
+[[tsl:2019::(:name "family")]]
+[[tsl:201906::(:hash "^304e")]]
+[[tsl:20190610-1543::(:name ("memory" "family"))]]
+[[tsl:20190610-154317]]
+#+end_src
 
 Note that if the :hash slot is nil, no hash computations will
 be performed. This enhances the speed a lot. So only use it
