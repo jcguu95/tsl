@@ -1,8 +1,15 @@
 ;; tsl -- timestamped links handler
 
-(setf tsl:lib '("~/data/storage/recordings"
-                "~/data/storage/memories/2011"
-                "~/data/storage/+org/wiki/fleeting"))
+(defvar tsl:lib)
+
+(loop for dir in
+      '("~/data/storage/recordings"
+        "~/data/storage/memories"
+        "~/data/storage/+org/wiki/fleeting")
+      do (add-to-list 'tsl:lib dir))
+
+(loop for dir in (f-directories "~/data/storage/memories")
+      do (add-to-list 'tsl:lib dir))
 
 (defun tsl:regex<-query (query)
   "Expect query to be a string in the following formats, in
@@ -37,9 +44,6 @@ example,
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 
-;; TODO - I want to add an org link type like this.
-;;   [[tsl:201106]]
-
 (org-link-set-parameters "tsl"
                          :follow #'org-tsl-open
                          :store #'org-tsl-store-link)
@@ -73,39 +77,47 @@ example,
          (lisp (nth 1 (split-string str "::")))
          (lst (when lisp (read lisp))))
 
-    (cl-labels ((md5sum (file)
-                        (with-demoted-errors "Error: %S"
-                          (and (file-exists-p file)
-                               (with-temp-buffer
-                                 (insert-file-contents file)
-                                 (md5 (buffer-string))))))
-                (filter-with (result lst)
-                             ;; main function to filter using lisp control string.
-                             (let ((hash (plist-get lst :hash))
-                                   (name (plist-get lst :name)))
-                               (when hash
-                                 (progn
-                                   (message "Computing hash might take a while.")
-                                   (setf result
+    (cl-labels
+        ((md5sum (file)
+                 (with-demoted-errors "Error: %S"
+                   (and (file-exists-p file)
+                        (with-temp-buffer
+                          (insert-file-contents file)
+                          (md5 (buffer-string))))))
+         (filter-with (result lst)
+                      ;; main function to filter using lisp control string.
+                      (let ((hash (plist-get lst :hash))
+                            (name (plist-get lst :name)))
+                        ;; Filter based on hash.
+                        (when hash
+                          (progn
+                            (message "Computing hash might take a while..")
+                            (setf result
+                                  (-filter (lambda (file)
+                                             (string-match hash (md5sum file)))
+                                           result))))
+                        ;; Filter based on name(s).
+                        (when name
+                          (when (atom name) (setf name (list name)))
+                          ;; Allow those whose absolute paths
+                          ;; match all regex given in the list
+                          ;; NAME.
+                          (loop for n in name
+                                do (setf result
                                          (-filter (lambda (file)
-                                                    (string-match hash (md5sum file)))
+                                                    (string-match n (f-full file)))
                                                   result))))
-                               (when name
-                                 (when (atom name) (setf name (list name)))
-                                 (loop for n in name
-                                       do (setf result
-                                                (-filter (lambda (file)
-                                                           (string-match n (f-full file)))
-                                                         result))))
-                               result)))
-      ;; Filter the results with lisp control string.
+                        result)))
+
+      ;; Do filter the results with lisp control string.
+      ;; FIXME should put this into tsl:find
       (setf result (filter-with result lst))
       (if result
           (progn
             (dired (cons "" result))
             (message "%s match(es) found for query -- %s. Full result: %s"
                      (length result) str result))
-        (message "No matches! Sorry!")))))
+        (message "No matches found! Sorry!")))))
 
 (defun org-tsl-store-link ()
   "Store a link to a timestamped link."
