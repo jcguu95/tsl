@@ -1,5 +1,40 @@
 ;; tsl -- timestamped links handler
 
+;; Example -
+;;
+;; The following org link of customized type ("tsl") should bring
+;; you to all files under TSL:LIB that have the timestring
+;; "20190610-******" in name, and also pass
+;;
+;; From the org link:
+;;
+;;   [[tsl:20190610::(:name ("memory" "family") :hash "^304e")]]
+;;
+;; this program will collect each file in one of the directory
+;; under TSL:LIB, if the followings are true.
+;;
+;; 1. That file has the timestring "20190610-******" in its name.
+;;
+;; 2. That file passes the name test and hash test: its absolute
+;;    path, as a string, must matches the regex query "memory"
+;;    and "family"; its md5sum, as a string, must matches the
+;;    regex query "^304e".
+;;
+;; Variants are allowed. For example
+;;
+;;   [[tsl:2019::(:name "family")]]
+;;   [[tsl:201906::(:hash "^304e")]]
+;;   [[tsl:20190610-1543::(:name ("memory" "family"))]]
+;;   [[tsl:20190610-154317]]
+;;
+;; Note that if the :hash slot is nil, no hash computations will
+;; be performed. This enhances the speed a lot. So only use it
+;; when it's necessary.
+
+;;; ;;; ;;; ;;; ;;; ;;; ;;
+;;; user customization ;;;
+;;; ;;; ;;; ;;; ;;; ;;; ;;
+
 (defvar tsl:lib)
 
 (loop for dir in
@@ -8,8 +43,13 @@
         "~/data/storage/+org/wiki/fleeting")
       do (add-to-list 'tsl:lib dir))
 
-(loop for dir in (f-directories "~/data/storage/memories")
+(loop for dir in
+      (f-directories "~/data/storage/memories")
       do (add-to-list 'tsl:lib dir))
+
+;;; ;;; ;;; ;; ;;
+;;; utilities ;;;
+;;; ;;; ;;; ;; ;;
 
 (defun tsl:regex<-query (query)
   "Expect query to be a string in the following formats, in
@@ -44,9 +84,16 @@ example,
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 
-(org-link-set-parameters "tsl"
-                         :follow #'org-tsl-open
-                         :store #'org-tsl-store-link)
+
+
+;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
+;;; org link of customized type ;;;
+;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
+
+(org-link-set-parameters
+ "tsl"
+ :follow #'org-tsl-open
+ :store #'org-tsl-store-link)
 
 (defun org-tsl-open (str arg)
   ;; TODO arg is universal arg? learn how to use.
@@ -70,7 +117,6 @@ example,
   ;; [[tsl:20191026::(:hash "3e4d" :name ("screen" "jpeg"))]]
   ;;
   ;; TODO 自動偵測 filetype 並給予建議
-
   (let* ((query (nth 0 (split-string str "::")))
          (result (tsl:find query))
 
