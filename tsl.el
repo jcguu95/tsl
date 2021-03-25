@@ -114,6 +114,7 @@ example,
                                          (-filter (lambda (file)
                                                     (string-match n (f-full file)))
                                                   result))))
+                        ;; TODO Add checks for ":size" and ":type".
                         ;; Filter based on hash.
                         (when hash
                           (progn
