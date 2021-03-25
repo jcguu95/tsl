@@ -5,6 +5,7 @@
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 
 (defvar tsl:lib nil)
+(defvar tsl:*search-history* nil)
 
 (loop for dir in
       '("~/data/storage/recordings"
@@ -135,6 +136,7 @@ example,
       (setf result (filter-with result lst))
       (if result
           (progn
+            (add-to-list 'tsl:*search-history* result)
             (dired (cons "" result))
             (message "%s match(es) found for query -- %s. Full result: %s"
                      (length result) str result))
