@@ -136,7 +136,7 @@ example,
       (setf result (filter-with result lst))
       (if result
           (progn
-            (add-to-list 'tsl:*search-history* result)
+            (add-to-list 'tsl:*search-history* (cons str result))
             (dired (cons "" result))
             (message "%s match(es) found for query -- %s. Full result: %s"
                      (length result) str result))
@@ -153,3 +153,12 @@ example,
      :type "tsl"
      :link link
      :description description)))
+
+(defun tsl:go-back-history ()
+  (interactive)
+  (dired
+   (alist-get
+    (ivy-read "Query string: "
+              (mapcar #'car tsl:*search-history*))
+    tsl:*search-history*
+    nil nil #'string=)))
