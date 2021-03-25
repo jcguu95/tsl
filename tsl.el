@@ -103,14 +103,6 @@ example,
                       ;; main function to filter using lisp control string.
                       (let ((hash (plist-get lst :hash))
                             (name (plist-get lst :name)))
-                        ;; Filter based on hash.
-                        (when hash
-                          (progn
-                            (message "Computing hash might take a while..")
-                            (setf result
-                                  (-filter (lambda (file)
-                                             (string-match hash (md5sum file)))
-                                           result))))
                         ;; Filter based on name(s).
                         (when name
                           (when (atom name) (setf name (list name)))
@@ -122,6 +114,14 @@ example,
                                          (-filter (lambda (file)
                                                     (string-match n (f-full file)))
                                                   result))))
+                        ;; Filter based on hash.
+                        (when hash
+                          (progn
+                            (message "Computing hash might take a while..")
+                            (setf result
+                                  (-filter (lambda (file)
+                                             (string-match hash (md5sum file)))
+                                           result))))
                         result)))
 
       ;; Do filter the results with lisp control string.
