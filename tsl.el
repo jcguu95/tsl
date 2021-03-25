@@ -9,7 +9,8 @@
 (loop for dir in
       '("~/data/storage/recordings"
         "~/data/storage/memories"
-        "~/data/storage/+org/wiki/fleeting")
+        "~/data/storage/+org/wiki/fleeting"
+        "~/data/storage/+org/store")
       do (add-to-list 'tsl:lib dir))
 
 (loop for dir in
@@ -49,7 +50,8 @@ example,
 
 (defun tsl:find (query)
   (loop for file in (-flatten (loop for dir in tsl:lib
-                                    collect (f-files dir)))
+                                    collect (f-files dir)
+                                    collect (f-directories dir)))
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 
@@ -121,7 +123,9 @@ example,
                             (message "Computing hash might take a while..")
                             (setf result
                                   (-filter (lambda (file)
-                                             (string-match hash (md5sum file)))
+                                             (if (f-directory-p file)
+                                                 t ;; pass all directories on hashes
+                                               (string-match hash (md5sum file))))
                                            result))))
                         result)))
 
