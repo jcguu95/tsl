@@ -4,7 +4,7 @@
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 
-(defvar tsl:lib)
+(defvar tsl:lib nil)
 
 (loop for dir in
       '("~/data/storage/recordings"
