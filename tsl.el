@@ -1,36 +1,5 @@
 ;; tsl -- timestamped links handler
 
-;; Example -
-;;
-;; The following org link of customized type ("tsl") should bring
-;; you to all files under TSL:LIB that have the timestring
-;; "20190610-******" in name, and also pass
-;;
-;; From the org link:
-;;
-;;   [[tsl:20190610::(:name ("memory" "family") :hash "^304e")]]
-;;
-;; this program will collect each file in one of the directory
-;; under TSL:LIB, if the followings are true.
-;;
-;; 1. That file has the timestring "20190610-******" in its name.
-;;
-;; 2. That file passes the name test and hash test: its absolute
-;;    path, as a string, must matches the regex query "memory"
-;;    and "family"; its md5sum, as a string, must matches the
-;;    regex query "^304e".
-;;
-;; Variants are allowed. For example
-;;
-;;   [[tsl:2019::(:name "family")]]
-;;   [[tsl:201906::(:hash "^304e")]]
-;;   [[tsl:20190610-1543::(:name ("memory" "family"))]]
-;;   [[tsl:20190610-154317]]
-;;
-;; Note that if the :hash slot is nil, no hash computations will
-;; be performed. This enhances the speed a lot. So only use it
-;; when it's necessary.
-
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
