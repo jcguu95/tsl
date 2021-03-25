@@ -39,6 +39,7 @@ example,
    20200725        => 20200725-dddddd
    20200725-1030   => 20200725-1030dd
    20200725-103057 => 20200725-103057"
+  ;; TODO rewrite it to support queries like ????0325-1534??
   (let ((len (length query)))
     (if (<= len 8)
         (rx-to-string `(seq ,query
