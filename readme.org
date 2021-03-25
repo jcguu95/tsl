@@ -3,8 +3,8 @@ names. For example,
 
 #+begin_src text
 20190615-070543.jpeg
-20190615-070543 20190615-070544.jpeg
-20190615-070545---receipt.jpeg
+20190615-105945---receipt.jpeg
+20190615-143000 20190715-235959.jpeg
 #+end_src
 
 I want to cite them in my org files with ease, thus coming up
