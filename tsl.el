@@ -161,6 +161,7 @@ example,
      :description description)))
 
 (defun tsl:go-back-history ()
+  ;; TODO merge this with usual search
   (interactive)
   (dired
    (alist-get
