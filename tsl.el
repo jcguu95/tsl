@@ -4,8 +4,11 @@
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 
-(defvar tsl:lib nil)
-(defvar tsl:*search-history* nil)
+(defvar tsl:lib nil
+  "The variable that stores the list of directories to search.")
+(defvar tsl:*search-history* nil
+  "The variable that stores all search histories that returned
+  non-NIL. It does not persist beyond different sessions.")
 
 (loop for dir in
       '("~/data/storage/recordings"
