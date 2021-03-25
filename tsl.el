@@ -4,6 +4,8 @@
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 
+;; TODO change name - org-link-ts?
+;;
 (defvar tsl:lib nil
   "The variable that stores the list of directories to search.")
 (defvar tsl:*search-history* nil
