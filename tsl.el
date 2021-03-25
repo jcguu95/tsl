@@ -37,13 +37,6 @@ example,
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 
-(tsl:find "20200610")
-(dired (tsl:find "20200610"))
-
-(dired (tsl:find "20111029-08"))
-
-(org-open-file (car (tsl:find "201110")))
-
 ;; TODO - I want to add an org link type like this.
 ;;   [[tsl:201106]]
 
@@ -51,7 +44,7 @@ example,
                          :follow #'org-tsl-open
                          :store #'org-tsl-store-link)
 
-(defun org-tsl-open (query arg)
+(defun org-tsl-open (str arg)
   ;; TODO arg is universal arg? learn how to use. TODO more
   ;; options to be added. TODO image => sxiv? TODO images =>
   ;; dired? sxiv loop? TODO audio(s)/video(s) => emm? Use dired
@@ -59,11 +52,31 @@ example,
   ;; provided. in the later case, if there are multiple files,
   ;; ask the user by using ivy what to do next: either ivy,
   ;; force-open, or select one (or multiple?) to force-open.
-  (let* ((result (tsl:find query))
-         (len (length result)))
-    (dired result)))
+  ;;
+  ;; TODO allow link format
+  ;; [[tsl:20191026::((hash . "3e4d") (name . "screen"))]]
+  ;;
+  ;; TODO 自動偵測 filetype 並給予建議
+
+  (let* ((query (nth 0 (split-string str "::")))
+         (result (tsl:find query))
+         (len (length result))
+
+         (lisp (nth 1 (split-string str "::")))
+         (lst (when lisp (read lisp))))
+
+    (if lst
+        (with-info lst (dired result))  ;; TODO to implement! (DSL)
+      (dired result))))
 
 (defun org-tsl-store-link ()
-  ;; TODO
-  )
-
+  "Store a link to a timestamped link."
+  ;; It only works for org-store-link ..
+  (let* ((ts (read-from-minibuffer "Time: "))
+         (lisp (read-from-minibuffer "Lisp: "))
+         (link (concat "tsl" ":" ts "::" lisp))
+         (description (read-from-minibuffer "Description: ")))
+    (org-link-store-props
+     :type "tsl"
+     :link link
+     :description description)))
