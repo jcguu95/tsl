@@ -1,5 +1,10 @@
 ;; tsl -- timestamped links handler
 
+(require 'cl)
+(require 'rx)
+(require 'f)
+(require 'dired)
+
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
@@ -11,11 +16,6 @@
 (defvar tsl:*search-history* nil
   "The variable that stores all search histories that returned
   non-NIL. It does not persist beyond different sessions.")
-
-(require 'cl)
-(require 'rx)
-(require 'f)
-(require 'dired)
 
 (loop for dir in
       '("~/data/storage/recordings"
@@ -156,6 +156,9 @@ example,
 (defun org-tsl-store-link ()
   "Store a link to a timestamped link."
   ;; It only works for org-store-link ..
+  ;; FIXME This interferes with org-capture even without the context of TSL.
+  ;; org-capture calls org-store-link, which calls org-store-link-functions..
+  ;; so I shouldn't use read-from-minibuffer.
   (let* ((ts (read-from-minibuffer "Time: "))
          (lisp (read-from-minibuffer "Lisp: "))
          (link (concat "tsl" ":" ts "::" lisp))
