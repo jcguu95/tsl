@@ -12,6 +12,11 @@
   "The variable that stores all search histories that returned
   non-NIL. It does not persist beyond different sessions.")
 
+(require 'cl)
+(require 'rx)
+(require 'f)
+(require 'dired)
+
 (loop for dir in
       '("~/data/storage/recordings"
         "~/data/storage/memories"
