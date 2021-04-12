@@ -169,3 +169,5 @@ example,
               (mapcar #'car tsl:*search-history*))
     tsl:*search-history*
     nil nil #'string=)))
+
+(provide 'tsl)
