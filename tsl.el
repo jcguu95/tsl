@@ -264,6 +264,13 @@ string."
          (ts (tsl:extract-ts-from-string str)))
     (dired-other-window (-flatten (-uniq (mapcar #'tsl:find ts))))))
 
+;; TODO use the following snippet to let user select which window to open dired in
+;; (defun my/dired-ace-selected-window (dirname &optional switches)
+;;   (interactive (dired-read-dir-and-switches "in other window "))
+;;   (let ((wnd (aw-select "Modeline?")))
+;;     (aw-switch-to-window wnd)
+;;     (switch-to-buffer (dired-noselect dirname switches))))
+
 ;;
 ;;
 ;;
