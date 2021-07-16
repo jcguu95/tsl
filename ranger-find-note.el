@@ -1,5 +1,7 @@
 ;;;; This file is under development.
 
+(require 'tsl)
+
 ;;; Let user select timestring from a given string.
 
 (defun my/tss-in-string (str)
@@ -32,3 +34,5 @@
  "20210428-130000-4.jpeg 20210429-101000 2021501-065000
  20210502-060000 20210504-060500.jpeg 20210429-111500.jpeg
  20210502-060000.jpeg 20190808-000100")
+
+(provide 'ranger-find-note)
