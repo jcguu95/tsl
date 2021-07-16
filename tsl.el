@@ -67,6 +67,7 @@ example,
         if (string-match (tsl:regex<-query query) (f-base file))
         collect file))
 ;; TODO add a time profiler.
+;; TODO Don't use f which is much slower. Use shell utils instead.
 
 
 ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
