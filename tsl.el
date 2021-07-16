@@ -5,6 +5,8 @@
 (require 'f)
 (require 'dired)
 
+(require 'ranger-find-note)
+
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
 ;;; user customization ;;;
 ;;; ;;; ;;; ;;; ;;; ;;; ;;
