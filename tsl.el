@@ -308,7 +308,7 @@ string."
          (len (length tss)))
     (cond ((= len 0) (message "No timestring to select."))
           ((= len 1) (car tss))
-          (t (ivy-read "Select timestamp: " tss)))))
+          (t (ivy-read "TSL - Select timestamp: " tss)))))
 
 (defun my/find-ts-files (str)
   "Extract timestamps from STR, let user choose one if multiple,
@@ -330,7 +330,7 @@ there is none."
         (let ((len (length files)))
           (cond ((= len 1) (find-file-other-window (car files)))
                 (t (find-file-other-window
-                    (ivy-read "Select note:" files)))))
+                    (ivy-read "TSL - Select note:" files)))))
       (let ((ans (ivy-read "No notes found! Want to create one? (y/n)"
                            (list "y" "n"))))
         (cond
