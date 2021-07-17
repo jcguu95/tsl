@@ -69,7 +69,6 @@ example,
     (loop for file in targets
           if (string-match (tsl:regex<-query query) (f-base file))
           collect file)))
-;; TODO add a time profiler.
 
 ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
 ;;; org link of customized type ;;;
@@ -229,6 +228,7 @@ Next, break them into tokens, and check if they are as expected."
                (and (integerp hour) (<= 0 hour 23))
                (and (integerp minute) (<= 0 minute 59))
                (and (integerp sec) (<= 0 sec 59))))))))
+
 (defun tsl:extract-ts-from-string (str)
   "The core utility that extracts time stamps from any given
 string."
@@ -255,9 +255,7 @@ string."
 
     ;; This is just a weird hack to prevent "legal" timestrings
     ;; like "101010" .. and it would still have some edge cases.
-    (-filter (lambda (x) (>= (length x) 8)) result)
-
-    ))
+    (-filter (lambda (x) (>= (length x) 8)) result)))
 
 (defun tsl:find-at-point ()
   ;; Only support "full" time string at this moment.
@@ -273,7 +271,7 @@ string."
 ;;     (aw-switch-to-window wnd)
 ;;     (switch-to-buffer (dired-noselect dirname switches))))
 
-
+;; ;; ;; ;; ;; ;; ;; ;;
 
 ;;; Let user select timestring from a given string.
 
