@@ -61,14 +61,21 @@ example,
                           (repeat ,(- 15 len) digit))))))
 
 (defun tsl:find (query)
-  (let ((targets (-flatten
-                  (loop for dir in tsl:lib
-                        collect
-                        (loop for file in (cddr (directory-files dir))
-                              collect (concat dir "/" file))))))
-    (loop for file in targets
-          if (string-match (tsl:regex<-query query) (f-base file))
-          collect file)))
+  (let* ((targets (-flatten
+                   (loop for dir in tsl:lib
+                         collect
+                         (loop for file in (cddr (directory-files dir))
+                               collect (concat dir "/" file)))))
+         (result (loop for file in targets
+                       if (string-match (tsl:regex<-query query) (f-base file))
+                       collect file)))
+    (or result
+        (progn
+          (run-with-timer 1 nil
+                          (lambda (query)
+                            (message "No results found for query: %s." query))
+                          query)
+          nil))))
 
 ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
 ;;; org link of customized type ;;;
@@ -300,15 +307,16 @@ string."
           (t (ivy-read "Select: " tss)))))
 
 (defun my/find-ts-note (str)
+  "Extract timestamps from STR, let user choose one if multiple,
+and find all files in TSL:LIB that has the selected timestamp."
   (let ((files (tsl:find (my/select-ts-from-string str))))
     (when files (dired-other-window files))))
 
-(my/find-ts-note)
-
 ;; Example
-;; (my/find-note-from-ts
+;; (my/find-ts-note
 ;;  "20210428-130000-4.jpeg 20210429-101000 2021501-065000
-;;  20210502-060000 20210504-060500.jpeg 20210429-111500.jpeg
-;;  20210502-060000.jpeg 20190808-000100")
+;;   20210502-060000 20210504-060500.jpeg 20210429-111500.jpeg
+;;   20210502-060000.jpeg 20190808-000100 20210701
+;;   20210714-133511---first-paper-submitted-to-arxiv")
 
 (provide 'tsl)
