@@ -336,8 +336,7 @@ there is none."
         (cond
          ((equal ans "y")
           (progn
-            ;; TODO
-            ;; Find a better workflow.
+            ;; TODO Find a better workflow.
             (add-to-list 'kill-ring selected-ts)
             (message "Added selected timestamp into kill-ring.")
             (org-roam-find-file)))
