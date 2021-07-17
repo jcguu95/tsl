@@ -331,7 +331,8 @@ there is none."
           (cond ((= len 1) (find-file-other-window (car files)))
                 (t (find-file-other-window
                     (ivy-read "TSL - Select note:" files)))))
-      (let ((ans (ivy-read "No notes found! Want to create one? (y/n)"
+      (let ((ans (ivy-read (format "No notes found for %s! Want to create one? (y/n)"
+                                   selected-ts)
                            (list "y" "n"))))
         (cond
          ((equal ans "y")
