@@ -329,7 +329,8 @@ there is none."
     (if files
         (let ((len (length files)))
           (cond ((= len 1) (find-file-other-window (car files)))
-                (t (find-file-other-window (ivy-read "Select note:" files)))))
+                (t (find-file-other-window
+                    (ivy-read "Select note:" files)))))
       (let ((ans (ivy-read "No notes found! Want to create one? (y/n)"
                            (list "y" "n"))))
         (cond
