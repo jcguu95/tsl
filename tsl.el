@@ -1,5 +1,7 @@
 ;; tsl -- timestamped links handler
 
+;; Disclaimer: this is a personal script.
+
 (require 'cl)
 (require 'rx)
 (require 'f)
@@ -304,7 +306,7 @@ string."
          (len (length tss)))
     (cond ((= len 0) (message "No timestring to select."))
           ((= len 1) (car tss))
-          (t (ivy-read "Select: " tss)))))
+          (t (ivy-read "Select timestamp: " tss)))))
 
 (defun my/find-ts-note (str)
   "Extract timestamps from STR, let user choose one if multiple,
