@@ -19,11 +19,13 @@
   "The variable that stores all search histories that returned
   non-NIL. It does not persist beyond different sessions.")
 
+(defvar tsl:note-dir "~/data/storage/+org/wiki/fleeting")
+
 (loop for dir in
-      '("~/data/storage/recordings"
-        "~/data/storage/memories"
-        "~/data/storage/+org/wiki/fleeting"
-        "~/data/storage/+org/store")
+      (list "~/data/storage/recordings"
+            "~/data/storage/memories"
+            "~/data/storage/+org/store"
+            tsl:note-dir)
       do (add-to-list 'tsl:lib dir))
 
 (loop for dir in
@@ -62,9 +64,9 @@ example,
       (rx-to-string `(seq ,query
                           (repeat ,(- 15 len) digit))))))
 
-(defun tsl:find (query)
+(cl-defun tsl:find (query &optional (dirs tsl:lib))
   (let* ((targets (-flatten
-                   (loop for dir in tsl:lib
+                   (loop for dir in dirs
                          collect
                          (loop for file in (cddr (directory-files dir))
                                collect (concat dir "/" file)))))
@@ -308,14 +310,41 @@ string."
           ((= len 1) (car tss))
           (t (ivy-read "Select timestamp: " tss)))))
 
-(defun my/find-ts-note (str)
+(defun my/find-ts-files (str)
   "Extract timestamps from STR, let user choose one if multiple,
 and find all files in TSL:LIB that has the selected timestamp."
-  (let ((files (tsl:find (my/select-ts-from-string str))))
+  (let ((selected-ts (my/select-ts-from-string str))
+        (files (tsl:find selected-ts)))
     (when files (dired-other-window files))))
 
+(defun my/find-ts-notes (str)
+  "Extract timestamps from STR, let user choose one if multiple,
+and find all notes in TSL:NOTE-DIR that has the selected
+timestamp. Jump to the note if there is one, let the user select
+the note if there are multiple, or ask the user to create one if
+there is none."
+  (let* ((selected-ts (my/select-ts-from-string str))
+         (files (tsl:find selected-ts
+                          (list tsl:note-dir))))
+    (if files
+        (let ((len (length files)))
+          (cond ((= len 1) (find-file-other-window (car files)))
+                (t (find-file-other-window (ivy-read "Select note:" files)))))
+      (let ((ans (ivy-read "No notes found! Want to create one? (y/n)"
+                           (list "y" "n"))))
+        (cond
+         ((equal ans "y")
+          (progn
+            ;; TODO
+            ;; Find a better workflow.
+            (add-to-list 'kill-ring selected-ts)
+            (message "Added selected timestamp into kill-ring.")
+            (org-roam-find-file)))
+         ((equal ans "n") nil)
+         (t (error "Invalid answer.")))))))
+
 ;; Example
-;; (my/find-ts-note
+;; (my/find-ts-notes
 ;;  "20210428-130000-4.jpeg 20210429-101000 2021501-065000
 ;;   20210502-060000 20210504-060500.jpeg 20210429-111500.jpeg
 ;;   20210502-060000.jpeg 20190808-000100 20210701
