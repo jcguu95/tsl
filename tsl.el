@@ -61,14 +61,15 @@ example,
                           (repeat ,(- 15 len) digit))))))
 
 (defun tsl:find (query)
-  (loop for file in (-flatten (loop for dir in tsl:lib
-                                    collect (f-files dir)
-                                    collect (f-directories dir)))
-        if (string-match (tsl:regex<-query query) (f-base file))
-        collect file))
+  (let ((targets (-flatten
+                  (loop for dir in tsl:lib
+                        collect
+                        (loop for file in (cddr (directory-files dir))
+                              collect (concat dir "/" file))))))
+    (loop for file in targets
+          if (string-match (tsl:regex<-query query) (f-base file))
+          collect file)))
 ;; TODO add a time profiler.
-;; TODO Don't use f which is much slower. Use shell utils instead.
-
 
 ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;; ;;;
 ;;; org link of customized type ;;;
