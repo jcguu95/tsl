@@ -271,9 +271,12 @@ string."
 ;;     (aw-switch-to-window wnd)
 ;;     (switch-to-buffer (dired-noselect dirname switches))))
 
-;; ;; ;; ;; ;; ;; ;; ;;
+;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;; ;;
+
 
 ;;; Let user select timestring from a given string.
+;;;
+;;; TODO Integrate this part of code with the above.
 
 (defvar my/*ts-format*
   (rx (repeat 8 digit)
@@ -296,9 +299,11 @@ string."
           ((= len 1) (car tss))
           (t (ivy-read "Select: " tss)))))
 
-(defun my/find-note-from-ts (str)
+(defun my/find-ts-note (str)
   (let ((files (tsl:find (my/select-ts-from-string str))))
     (when files (dired-other-window files))))
+
+(my/find-ts-note)
 
 ;; Example
 ;; (my/find-note-from-ts
